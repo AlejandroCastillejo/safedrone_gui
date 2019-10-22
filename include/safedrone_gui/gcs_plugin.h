@@ -47,6 +47,9 @@
 
 // Messages
 // #include <inspector_gcs/UavList.h>
+#include <safedrone_gui/UalState.h>
+
+#include <safedrone_gui/InstructionCommand.h>
 
 // TEST
 #include "sensor_msgs/PointCloud2.h"
@@ -55,7 +58,7 @@
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/NavSatFix.h"
 
-#include <uav_abstraction_layer/ual.h>
+// #include <uav_abstraction_layer/ual.h>
 // #include <uav_abstraction_layer/GoToWaypoint.h>
 // #include <uav_abstraction_layer/Land.h>
 // #include <uav_abstraction_layer/TakeOff.h>
@@ -78,22 +81,12 @@ public:
   // --------------------------------------------------------------------------
 protected slots:
 
-  virtual void press_EditMissionFile();
-  virtual void press_EditCamerasFile();
-  virtual void press_OpenMapView();
-
-  virtual void press_CreateMission();
-  virtual void press_SendMission();
+  virtual void press_TakeOff_1();
+  virtual void press_TakeOff_2();
+  virtual void press_TakeOff_3();
 
   virtual void press_StartMission();
-  virtual void press_StopMission();
-  virtual void press_ResumeMission();
-  virtual void press_AbortMission();
 
-  virtual void press_StartMission_2();
-  virtual void press_StopMission_2();
-  virtual void press_ResumeMission_2();
-  virtual void press_AbortMission_2();
 
 protected:
 
@@ -107,7 +100,7 @@ protected:
   virtual void adl_state_cb(const std_msgs::String msg);
   
   // UAL //
-  virtual void ual_state_cb(const uav_abstraction_layer::State msg);
+  virtual void ual_state_cb(const safedrone_gui::UalState msg);
   virtual void pose_callback(const geometry_msgs::PoseStamped);
 
   // Comment in to signal that the plugin has a way to configure it
@@ -129,6 +122,16 @@ private:
   // Thread
   std::thread gui_thread;
   void guiThread();
+
+
+  ///////////////////////
+  // SafeDrone GUI //
+
+  ros::ServiceClient instruction_srv;
+  // instruction_srv = n_.serviceClient<safedrone_gui::InstructionCommand>("/magna/gs/external_input");
+  safedrone_gui::InstructionCommand instruction_service;
+  
+  ////////////////////////
 
   //////////////////////////////////////////
   // Inspector GCS //

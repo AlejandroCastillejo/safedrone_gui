@@ -4,9 +4,6 @@
 
 namespace safedrone_gui
 {
-// GetFromJson g_Json;
-// MissionBuilder mb;
-// QList<QGeoCoordinate> PolygonCoordinates;
 
 GcsPlugin::GcsPlugin()
     : rqt_gui_cpp::Plugin(), widget_(0)
@@ -52,20 +49,11 @@ void GcsPlugin::initPlugin(qt_gui_cpp::PluginContext &context)
   gui_thread = std::thread(&GcsPlugin::guiThread, this);
 
     // CONNECT
-  connect(ui_.pushButton_EditMissionFile, SIGNAL(pressed()), this, SLOT(press_EditMissionFile()));
-  connect(ui_.pushButton_EditCamerasFile, SIGNAL(pressed()), this, SLOT(press_EditCamerasFile()));
-  connect(ui_.pushButton_OpenMapView, SIGNAL(pressed()), this, SLOT(press_OpenMapView()));
-  
-  connect(ui_.pushButton_CreateMission, SIGNAL(pressed()), this, SLOT(press_CreateMission()));
-  connect(ui_.pushButton_SendMission, SIGNAL(pressed()), this, SLOT(press_SendMission()));
+  connect(ui_.pushButton_TakeOff_1, SIGNAL(pressed()), this, SLOT(press_TakeOff_1()));
+  connect(ui_.pushButton_TakeOff_2, SIGNAL(pressed()), this, SLOT(press_TakeOff_2()));
+  connect(ui_.pushButton_TakeOff_3, SIGNAL(pressed()), this, SLOT(press_TakeOff_3()));
   connect(ui_.pushButton_StartMission, SIGNAL(pressed()), this, SLOT(press_StartMission()));
-  connect(ui_.pushButton_StopMission, SIGNAL(pressed()), this, SLOT(press_StopMission()));
-  connect(ui_.pushButton_ResumeMission, SIGNAL(pressed()), this, SLOT(press_ResumeMission()));
-  connect(ui_.pushButton_AbortMission, SIGNAL(pressed()), this, SLOT(press_AbortMission()));
-  connect(ui_.pushButton_StartMission_2, SIGNAL(pressed()), this, SLOT(press_StartMission_2()));
-  connect(ui_.pushButton_StopMission_2, SIGNAL(pressed()), this, SLOT(press_StopMission_2()));
-  connect(ui_.pushButton_ResumeMission_2, SIGNAL(pressed()), this, SLOT(press_ResumeMission_2()));
-  connect(ui_.pushButton_AbortMission_2, SIGNAL(pressed()), this, SLOT(press_AbortMission_2()));
+
   
   // connect(ui_.uav_selection_Box, SIGNAL(currentIndexChanged(int index)), this, SLOT(on_uav_selection_Box_currentIndexChanged(int index)));
     
@@ -157,92 +145,95 @@ void GcsPlugin::guiThread()
   // ROS_INFO("guiThread");
   std::string uav_id;
 
+  instruction_srv = n_.serviceClient<safedrone_gui::InstructionCommand>("/magna/gs/external_input");
+
   while (ros::ok()){
     uav_id = ui_.uav_selection_Box->currentText().toStdString();
 
     pose_sub = n_.subscribe(uav_id + "/ual/pose", 0, &GcsPlugin::pose_callback, this);
-    gps_pos_sub = n_.subscribe(uav_id + "/dji_sdk/gps_position", 0, &GcsPlugin::gps_pos_cb, this);
+    // gps_pos_sub = n_.subscribe(uav_id + "/dji_sdk/gps_position", 0, &GcsPlugin::gps_pos_cb, this);
     ual_state_sub = n_.subscribe(uav_id + "/ual/state", 0, &GcsPlugin::ual_state_cb, this);
-    adl_state_sub = n_.subscribe(uav_id + "/adl_state", 0, &GcsPlugin::adl_state_cb, this);
+    // adl_state_sub = n_.subscribe(uav_id + "/adl_state", 0, &GcsPlugin::adl_state_cb, this);
 
-    if (uav_list.count() == 0) {
-      ui_.pushButton_CreateMission->setVisible(false);
-    } else {
-      ui_.pushButton_CreateMission->setVisible(true);
-    }
-    if (mission_created) {
-      ui_.pushButton_SendMission->setVisible(true);
-    } else {
-      ui_.pushButton_SendMission->setVisible(false);
-    }
+    // if (uav_list.count() == 0) {
+    //   ui_.pushButton_CreateMission->setVisible(false);
+    // } else {
+    //   ui_.pushButton_CreateMission->setVisible(true);
+    // }
+    // if (mission_created) {
+    //   ui_.pushButton_SendMission->setVisible(true);
+    // } else {
+    //   ui_.pushButton_SendMission->setVisible(false);
+    // }
 
     if (uav_id == ""){
-      ui_.pushButton_StartMission_2->setVisible(true);
-      ui_.pushButton_StopMission_2->setVisible(true);
-      ui_.pushButton_ResumeMission_2->setVisible(true);
-      ui_.pushButton_AbortMission_2->setVisible(true);
-      ui_.getUalState->del();
-      ui_.getAdlState->del();
-      ui_.getLat->del();
-      ui_.getLong->del();
-      ui_.getAlt->del();
-      ui_.getPosePx->del();
-      ui_.getPosePy->del();
-      ui_.getPosePz->del();
+      // ui_.pushButton_StartMission_2->setVisible(true);
+      // ui_.pushButton_StopMission_2->setVisible(true);
+      // ui_.pushButton_ResumeMission_2->setVisible(true);
+      // ui_.pushButton_AbortMission_2->setVisible(true);
+
+      // ui_.getUalState->del();
+      // ui_.getAdlState->del();
+      // ui_.getLat->del();
+      // ui_.getLong->del();
+      // ui_.getAlt->del();
+      // ui_.getPosePx->del();
+      // ui_.getPosePy->del();
+      // ui_.getPosePz->del();
     } 
-    else {
-      if (mission_sent && ros::service::exists(uav_id + "/stby_action_service", false)) {
-        ui_.pushButton_StartMission_2->setVisible(true);
-      } else {
-        ui_.pushButton_StartMission_2->setVisible(false);
-      }
+    // else {
+    //   if (mission_sent && ros::service::exists(uav_id + "/stby_action_service", false)) {
+    //     ui_.pushButton_StartMission_2->setVisible(true);
+    //   } else {
+    //     ui_.pushButton_StartMission_2->setVisible(false);
+    //   }
 
-      if (mission_sent && ros::service::exists(uav_id + "/stop_service", false)) {
-        ui_.pushButton_StopMission_2->setVisible(true);
-      } else {
-        ui_.pushButton_StopMission_2->setVisible(false);
-      }
+    //   if (mission_sent && ros::service::exists(uav_id + "/stop_service", false)) {
+    //     ui_.pushButton_StopMission_2->setVisible(true);
+    //   } else {
+    //     ui_.pushButton_StopMission_2->setVisible(false);
+    //   }
 
-      if (ros::service::exists(uav_id + "/paused_state_action_service", false)) {
-        ui_.pushButton_ResumeMission_2->setVisible(true);
-        ui_.pushButton_AbortMission_2->setVisible(true);
-      } else {
-        ui_.pushButton_ResumeMission_2->setVisible(false);
-        ui_.pushButton_AbortMission_2->setVisible(false);
-      }
+    //   if (ros::service::exists(uav_id + "/paused_state_action_service", false)) {
+    //     ui_.pushButton_ResumeMission_2->setVisible(true);
+    //     ui_.pushButton_AbortMission_2->setVisible(true);
+    //   } else {
+    //     ui_.pushButton_ResumeMission_2->setVisible(false);
+    //     ui_.pushButton_AbortMission_2->setVisible(false);
+    //   }
 
 
-      stby_action_service_count = 0;
-      stop_service_count = 0;
-      paused_state_action_service_count = 0;
-      for (int i = 0; i < uav_list.count(); ++i) {
-        uav_id = uav_list[i].toStdString();
-        if (ros::service::exists(uav_id + "/stby_action_service", false)) {stby_action_service_count ++;}
-        if (ros::service::exists(uav_id + "/stop_service", false)) {stop_service_count ++;}
-        if (ros::service::exists(uav_id + "/paused_state_action_service", false)) {paused_state_action_service_count ++;}
-      }
+    //   stby_action_service_count = 0;
+    //   stop_service_count = 0;
+    //   paused_state_action_service_count = 0;
+    //   for (int i = 0; i < uav_list.count(); ++i) {
+    //     uav_id = uav_list[i].toStdString();
+    //     if (ros::service::exists(uav_id + "/stby_action_service", false)) {stby_action_service_count ++;}
+    //     if (ros::service::exists(uav_id + "/stop_service", false)) {stop_service_count ++;}
+    //     if (ros::service::exists(uav_id + "/paused_state_action_service", false)) {paused_state_action_service_count ++;}
+    //   }
 
-      if (mission_sent && (stby_action_service_count == uav_list.count()) ) {
-        ui_.pushButton_StartMission->setVisible(true);
-      } else {
-        ui_.pushButton_StartMission->setVisible(false);
-      }      
+    //   if (mission_sent && (stby_action_service_count == uav_list.count()) ) {
+    //     ui_.pushButton_StartMission->setVisible(true);
+    //   } else {
+    //     ui_.pushButton_StartMission->setVisible(false);
+    //   }      
       
-      if (mission_sent && (stop_service_count == uav_list.count()) ) {
-        ui_.pushButton_StopMission->setVisible(true);
-      } else {
-        ui_.pushButton_StopMission->setVisible(false);
-      }
+    //   if (mission_sent && (stop_service_count == uav_list.count()) ) {
+    //     ui_.pushButton_StopMission->setVisible(true);
+    //   } else {
+    //     ui_.pushButton_StopMission->setVisible(false);
+    //   }
       
-      if (paused_state_action_service_count == uav_list.count()) {
-        ui_.pushButton_ResumeMission->setVisible(true);
-        ui_.pushButton_AbortMission->setVisible(true);
-      } else {
-        ui_.pushButton_ResumeMission->setVisible(false);
-        ui_.pushButton_AbortMission->setVisible(false);
-      }
-    }
-    ros::Duration(0.5).sleep(); // sleep for half a second
+    //   if (paused_state_action_service_count == uav_list.count()) {
+    //     ui_.pushButton_ResumeMission->setVisible(true);
+    //     ui_.pushButton_AbortMission->setVisible(true);
+    //   } else {
+    //     ui_.pushButton_ResumeMission->setVisible(false);
+    //     ui_.pushButton_AbortMission->setVisible(false);
+    //   }
+    // }
+    ros::Duration(0.5).sleep();
   }
 }
 
@@ -282,141 +273,37 @@ void GcsPlugin::guiThread()
 //   }
 // }
 
-void GcsPlugin::press_EditMissionFile()
+void GcsPlugin::press_TakeOff_1()
 {
-std::string mission_file_location = ros::package::getPath("inspector_gcs") + "/json_files/mission_file.json";
-system(("gedit " + mission_file_location).c_str());
+  ROS_INFO("GUI: Take Off 1 clicked");
+  instruction_service.request.instruction = "1_take_off";
+  // instruction_srv = n_.serviceClient<safedrone_gui::InstructionCommand>("/magna/gs/external_input");
+  instruction_srv.call(instruction_service);
 }
 
-void GcsPlugin::press_EditCamerasFile()
+void GcsPlugin::press_TakeOff_2()
 {
-std::string cameras_file_location = ros::package::getPath("inspector_gcs") + "/json_files/cameras.json";
-system(("gedit " + cameras_file_location).c_str());
+  ROS_INFO("GUI: Take Off 2 clicked");
+  instruction_service.request.instruction = "2_take_off";
+  // instruction_srv = n_.serviceClient<safedrone_gui::InstructionCommand>("/magna/gs/external_input");
+  instruction_srv.call(instruction_service);
 }
 
-void GcsPlugin::press_OpenMapView()
+void GcsPlugin::press_TakeOff_3()
 {
-std::string rviz_file_location = ros::package::getPath("inspector_gcs") + "/launch/map_visualization.rviz";
-// system("roslaunch inspector_gcs map_visualization.launch");
-system(("rosrun rviz rviz -d " + rviz_file_location).c_str());
+  ROS_INFO("GUI: Take Off 3 clicked");
+  instruction_service.request.instruction = "3_take_off";
+  // instruction_srv = n_.serviceClient<safedrone_gui::InstructionCommand>("/magna/gs/external_input");
+  instruction_srv.call(instruction_service);
 }
-
-void GcsPlugin::press_CreateMission()
-{
-  // qDebug() << "create_misssion clicked" << endl;
-  ROS_INFO("GUI: create_misssion clicked");
-
-  // mission_created = createMission_srv.call(create_mission_service);
-}
-
-void GcsPlugin::press_SendMission()
-{
-  ROS_INFO("GUI: send_misssion clicked");
-  // mission_sent = sendMission_srv.call(send_mission_service);
-} 
 
 void GcsPlugin::press_StartMission()
 {
-  // ROS_INFO("StartMissionAll clicked");
-  // std::string uav_id;
-  // stby_action_service.request.stby_action = inspector_gcs::StbyActionService::Request::START_NEW_MISSION;
-  
-  // for (int i = 0; i < uav_list.count(); ++i){
-  //   uav_id = uav_list[i].toStdString();
-
-  //   stby_action_srv = n_.serviceClient<inspector_gcs::StbyActionService>(uav_id + "/stby_action_service");
-  //   // ros::service::waitForService(uav_id + "/stby_action_service");
-  //   ROS_INFO("Calling StartMission for %s", uav_id.c_str());
-  //   stby_action_srv.call(stby_action_service);
-  // }
+  ROS_INFO("GUI: Start Mission clicked");
+  instruction_service.request.instruction = "start_mission";
+  instruction_srv.call(instruction_service);
 }
 
-void GcsPlugin::press_StopMission()
-{
-//   ROS_INFO("StopMissionAll clicked");
-//   std::string uav_id;
-
-//   for (int i = 0; i < uav_list.count(); ++i){
-//     uav_id = uav_list[i].toStdString();
-
-//     stop_srv = n_.serviceClient<inspector_gcs::StopService>(uav_id + "/stop_service");
-//     ROS_INFO("Calling StopMission for %s", uav_id.c_str());
-//     stop_srv.call(stop_service);
-//   }
-}
-
-void GcsPlugin::press_ResumeMission()
-{
-  // ROS_INFO("ResumeMissionAll clicked");
-  // std::string uav_id;
-  // paused_state_action_service.request.paused_action = inspector_gcs::PausedStActionService::Request::RESUME_PAUSED_MISSION;
-
-  // for (int i = 0; i < uav_list.count(); ++i){
-  //   uav_id = uav_list[i].toStdString();
-
-  //   paused_st_action_srv = n_.serviceClient<inspector_gcs::PausedStActionService>(uav_id + "/paused_state_action_service");
-  //   ROS_INFO("Calling ResumeMission for %s", uav_id.c_str());
-  //   paused_st_action_srv.call(paused_state_action_service);
-  // }
-}
-
-void GcsPlugin::press_AbortMission()
-{
-  // ROS_INFO("AbortMissionAll clicked");
-  // std::string uav_id;
-  // paused_state_action_service.request.paused_action = inspector_gcs::PausedStActionService::Request::START_NEW_MISSION;
-
-  // for (int i = 0; i < uav_list.count(); ++i){
-  //   uav_id = uav_list[i].toStdString();
-
-  //   paused_st_action_srv = n_.serviceClient<inspector_gcs::PausedStActionService>(uav_id + "/paused_state_action_service");
-  //   ROS_INFO("Calling AbortMission for %s", uav_id.c_str());
-  //   paused_st_action_srv.call(paused_state_action_service);
-  // }
-}
-
-void GcsPlugin::press_StartMission_2()
-{
-  // std::string uav_id = ui_.uav_selection_Box->currentText().toStdString();
-
-  // stby_action_service.request.stby_action = inspector_gcs::StbyActionService::Request::START_NEW_MISSION; 
-  // stby_action_srv = n_.serviceClient<inspector_gcs::StbyActionService>(uav_id + "/stby_action_service");
-
-  // ROS_INFO("Calling StartMission for %s", uav_id.c_str());
-  // stby_action_srv.call(stby_action_service);
-}
-
-void GcsPlugin::press_StopMission_2()
-{
-  // std::string uav_id = ui_.uav_selection_Box->currentText().toStdString();
-
-  // stop_srv = n_.serviceClient<inspector_gcs::StopService>(uav_id + "/stop_service");
-  // ROS_INFO("Calling StopMission for %s", uav_id.c_str());
-  // stop_srv.call(stop_service);
-}
-
-void GcsPlugin::press_ResumeMission_2()
-{
-//   std::string uav_id = ui_.uav_selection_Box->currentText().toStdString();
-
-//   paused_state_action_service.request.paused_action = inspector_gcs::PausedStActionService::Request::RESUME_PAUSED_MISSION;
-//   paused_st_action_srv = n_.serviceClient<inspector_gcs::PausedStActionService>(uav_id + "/paused_state_action_service");
-
-//   ROS_INFO("Calling ResumeMission for %s", uav_id.c_str());
-//   paused_st_action_srv.call(paused_state_action_service);
-}
-
-void GcsPlugin::press_AbortMission_2()
-{
-  // std::string uav_id = ui_.uav_selection_Box->currentText().toStdString();
-
-  //   paused_state_action_service.request.paused_action = inspector_gcs::PausedStActionService::Request::START_NEW_MISSION;
-  //   paused_st_action_srv = n_.serviceClient<inspector_gcs::PausedStActionService>(uav_id + "/paused_state_action_service");
-    
-  //   ROS_INFO("Calling AbortMission for %s", uav_id.c_str());
-  //   paused_st_action_srv.call(paused_state_action_service);
-
-}
 
 // void GcsPlugin::on_uav_selection_Box_currentIndexChanged(int index)
 // {
@@ -429,30 +316,30 @@ void GcsPlugin::press_AbortMission_2()
 
 // --------------------------------------------------------------------------
 // UAL //
-void GcsPlugin::ual_state_cb(const uav_abstraction_layer::State msg)
+void GcsPlugin::ual_state_cb(const safedrone_gui::UalState msg)
 {
   QString txt = QString::fromStdString(ual_states[msg.state]);
   // ui_.label_State->setText(txt);
-  ui_.getUalState->setText(txt);
+  ui_.getUalState_1->setText(txt);
 }
 void GcsPlugin::adl_state_cb(const std_msgs::String msg)
 {
   QString txt = QString::fromStdString(msg.data);
-  ui_.getAdlState->setText(txt);
+  ui_.getAdlState_1->setText(txt);
 }
 
 void GcsPlugin::gps_pos_cb(const sensor_msgs::NavSatFix msg)
 {
-  ui_.getLat->setText(QString::number(msg.latitude, 'f', 5));
-  ui_.getLong->setText(QString::number(msg.longitude, 'f', 5));
-  ui_.getAlt->setText(QString::number(msg.altitude, 'f', 2));
+  ui_.getLat_1->setText(QString::number(msg.latitude, 'f', 5));
+  ui_.getLong_1->setText(QString::number(msg.longitude, 'f', 5));
+  ui_.getAlt_1->setText(QString::number(msg.altitude, 'f', 2));
 }
 
 void GcsPlugin::pose_callback(const geometry_msgs::PoseStamped msg)
 {
-  ui_.getPosePx->setText(QString::number(msg.pose.position.x, 'f', 2));
-  ui_.getPosePy->setText(QString::number(msg.pose.position.y, 'f', 2));
-  ui_.getPosePz->setText(QString::number(msg.pose.position.z, 'f', 2));
+  ui_.getPosePx_1->setText(QString::number(msg.pose.position.x, 'f', 2));
+  ui_.getPosePy_1->setText(QString::number(msg.pose.position.y, 'f', 2));
+  ui_.getPosePz_1->setText(QString::number(msg.pose.position.z, 'f', 2));
   // ui_.getPoseOx->setText(QString::number(msg.pose.orientation.x, 'f', 2));
   // ui_.getPoseOy->setText(QString::number(msg.pose.orientation.y, 'f', 2));
   // ui_.getPoseOz->setText(QString::number(msg.pose.orientation.z, 'f', 2));

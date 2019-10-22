@@ -1,5 +1,5 @@
-<library path="lib/libinspector_gcs">
-  <class name="inspector_gcs/GcsPlugin" type="inspector_gcs::GcsPlugin" base_class_type="rqt_gui_cpp::Plugin">
+<library path="lib/libsafedrone_gui">
+  <class name="safedrone_gui/GcsPlugin" type="safedrone_gui::GcsPlugin" base_class_type="rqt_gui_cpp::Plugin">
 <!--<library path="src">
   <class name="GcsPlugin" type="inspector_gcs::GcsPlugin" base_class_type="rqt_gui_cpp::Plugin">-->
     <description>
@@ -14,7 +14,7 @@
         <label>Subgroup</label>
       </group>
       -->
-      <label>C++ Plugin GCS</label>
+      <label>SafeDrone Plugin GCS</label>
       <icon type="theme">system-help</icon>
       <statustip>Great user interface to provide real value.</statustip>
     </qtgui>

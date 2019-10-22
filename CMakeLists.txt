@@ -8,12 +8,13 @@ add_compile_options(-std=c++11)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  message_generation  
   roscpp
   rospy
   rqt_gui
   rqt_gui_cpp
   std_msgs
-  uav_abstraction_layer
+  # uav_abstraction_layer
 )
 
 ## System dependencies are found with CMake's conventions
@@ -68,18 +69,18 @@ include_directories( ${CMAKE_BINARY_DIR} )
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  UalState.msg
+)
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
+add_service_files(
+  FILES
+  InstructionCommand.srv
 #   Service1.srv
 #   Service2.srv
-# )
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -127,7 +128,7 @@ catkin_package(
  INCLUDE_DIRS include
  INCLUDE_DIRS ${safedrone_gui_INCLUDE_DIRECTORIES}
  LIBRARIES safedrone_gui
- CATKIN_DEPENDS roscpp rqt_gui rqt_gui_cpp rospy std_msgs uav_abstraction_layer
+ CATKIN_DEPENDS roscpp rqt_gui rqt_gui_cpp rospy std_msgs 
 #  DEPENDS system_lib
 )
 
