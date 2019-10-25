@@ -316,7 +316,7 @@ p, li { white-space: pre-wrap; }
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="getAdlState_1">
+   <widget class="QLineEdit" name="getMagnaState_1">
     <property name="geometry">
      <rect>
       <x>202</x>
@@ -395,7 +395,7 @@ p, li { white-space: pre-wrap; }
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="pushButton_SetHome_1">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -680,7 +680,7 @@ p, li { white-space: pre-wrap; }
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="getAdlState_2">
+   <widget class="QLineEdit" name="getMagnaState_2">
     <property name="geometry">
      <rect>
       <x>202</x>
@@ -1076,7 +1076,7 @@ p, li { white-space: pre-wrap; }
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="getAdlState_3">
+   <widget class="QLineEdit" name="getMagnaState_3">
     <property name="geometry">
      <rect>
       <x>202</x>
@@ -1207,13 +1207,28 @@ p, li { white-space: pre-wrap; }
      <x>1160</x>
      <y>60</y>
      <width>91</width>
-     <height>141</height>
+     <height>81</height>
     </rect>
    </property>
    <property name="text">
     <string>Start 
 
 Mission</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_UniflyReady">
+   <property name="geometry">
+    <rect>
+     <x>1160</x>
+     <y>170</y>
+     <width>91</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Unifly 
+
+Ready</string>
    </property>
   </widget>
  </widget>

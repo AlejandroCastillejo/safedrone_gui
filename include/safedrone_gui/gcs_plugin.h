@@ -49,6 +49,7 @@
 // #include <inspector_gcs/UavList.h>
 #include <safedrone_gui/UalState.h>
 
+#include <safedrone_gui/UalSetHome.h>
 #include <safedrone_gui/InstructionCommand.h>
 
 // TEST
@@ -84,24 +85,36 @@ protected slots:
   virtual void press_TakeOff_1();
   virtual void press_TakeOff_2();
   virtual void press_TakeOff_3();
+  virtual void press_SetHome_1();
+  virtual void press_SetHome_2();
+  virtual void press_SetHome_3();
 
   virtual void press_StartMission();
+  virtual void press_UniflyReady();
 
 
 protected:
 
   // DJI_SDK 
-  virtual void gps_pos_cb(const sensor_msgs::NavSatFix);
+  virtual void gps_pos_1_cb(const sensor_msgs::NavSatFix);
+  virtual void gps_pos_2_cb(const sensor_msgs::NavSatFix);
+  virtual void gps_pos_3_cb(const sensor_msgs::NavSatFix);
   
   // GCS
   // virtual void uav_list_cb(const inspector_gcs::UavList);
   
   // ADL
-  virtual void adl_state_cb(const std_msgs::String msg);
+  virtual void magna_state_1_cb(const std_msgs::String msg);
+  virtual void magna_state_2_cb(const std_msgs::String msg);
+  virtual void magna_state_3_cb(const std_msgs::String msg);
   
   // UAL //
-  virtual void ual_state_cb(const safedrone_gui::UalState msg);
-  virtual void pose_callback(const geometry_msgs::PoseStamped);
+  virtual void ual_state_1_cb(const safedrone_gui::UalState msg);
+  virtual void ual_state_2_cb(const safedrone_gui::UalState msg);
+  virtual void ual_state_3_cb(const safedrone_gui::UalState msg);
+  virtual void pose_1_cb(const geometry_msgs::PoseStamped);
+  virtual void pose_2_cb(const geometry_msgs::PoseStamped);
+  virtual void pose_3_cb(const geometry_msgs::PoseStamped);
 
   // Comment in to signal that the plugin has a way to configure it
   // bool hasConfiguration() const;
@@ -128,8 +141,10 @@ private:
   // SafeDrone GUI //
 
   ros::ServiceClient instruction_srv;
-  // instruction_srv = n_.serviceClient<safedrone_gui::InstructionCommand>("/magna/gs/external_input");
+  ros::ServiceClient set_home_srv;
+
   safedrone_gui::InstructionCommand instruction_service;
+  safedrone_gui::UalSetHome set_home_service;
   
   ////////////////////////
 
@@ -152,12 +167,12 @@ private:
   //////////////////////////////////////////
 
   // Subscribers
-    // DJI_SDK
-  ros::Subscriber gps_pos_sub;
+    // Mavros
+  ros::Subscriber gps_pos_1_sub, gps_pos_2_sub, gps_pos_3_sub;
     // ADL
-  ros::Subscriber adl_state_sub;
+  ros::Subscriber magna_state_1_sub, magna_state_2_sub, magna_state_3_sub;
     // UAL
-  ros::Subscriber ual_state_sub, pose_sub, velocity_sub;
+  ros::Subscriber ual_state_1_sub, ual_state_2_sub, ual_state_3_sub, pose_1_sub, pose_2_sub, pose_3_sub, velocity_sub;
   
   // UAL //
   // ros::ServiceClient srvTakeOff, srvLand, srvGoToWaypoint, srvSetVelocity;
