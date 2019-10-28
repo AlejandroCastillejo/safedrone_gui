@@ -34,19 +34,9 @@
 #include <pluginlib/class_list_macros.h>
 
 #include <QGuiApplication>
-// #include <QQmlApplicationEngine>
-
 
 // Services
-// #include <inspector_gcs/MissionService.h>
-// #include <inspector_gcs/StbyActionService.h>
-// #include <inspector_gcs/PausedStActionService.h>
-// #include <inspector_gcs/StopService.h>
-// #include <inspector_gcs/gcsCreateMission.h>
-// #include <inspector_gcs/gcsSendMission.h>
 
-// Messages
-// #include <inspector_gcs/UavList.h>
 #include <safedrone_gui/UalState.h>
 
 #include <safedrone_gui/UalSetHome.h>
@@ -58,12 +48,8 @@
 #include <geometry_msgs/TwistStamped.h>
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/NavSatFix.h"
+#include "sensor_msgs/BatteryState.h"
 
-// #include <uav_abstraction_layer/ual.h>
-// #include <uav_abstraction_layer/GoToWaypoint.h>
-// #include <uav_abstraction_layer/Land.h>
-// #include <uav_abstraction_layer/TakeOff.h>
-// #include <uav_abstraction_layer/SetVelocity.h>
 
 namespace safedrone_gui
 {
@@ -95,19 +81,6 @@ protected slots:
 
 protected:
 
-  // DJI_SDK 
-  virtual void gps_pos_1_cb(const sensor_msgs::NavSatFix);
-  virtual void gps_pos_2_cb(const sensor_msgs::NavSatFix);
-  virtual void gps_pos_3_cb(const sensor_msgs::NavSatFix);
-  
-  // GCS
-  // virtual void uav_list_cb(const inspector_gcs::UavList);
-  
-  // ADL
-  virtual void magna_state_1_cb(const std_msgs::String msg);
-  virtual void magna_state_2_cb(const std_msgs::String msg);
-  virtual void magna_state_3_cb(const std_msgs::String msg);
-  
   // UAL //
   virtual void ual_state_1_cb(const safedrone_gui::UalState msg);
   virtual void ual_state_2_cb(const safedrone_gui::UalState msg);
@@ -115,6 +88,23 @@ protected:
   virtual void pose_1_cb(const geometry_msgs::PoseStamped);
   virtual void pose_2_cb(const geometry_msgs::PoseStamped);
   virtual void pose_3_cb(const geometry_msgs::PoseStamped);
+  //
+
+  // MAGNA //
+  virtual void magna_state_1_cb(const std_msgs::String msg);
+  virtual void magna_state_2_cb(const std_msgs::String msg);
+  virtual void magna_state_3_cb(const std_msgs::String msg);
+  //
+
+  // MAVROS //
+  virtual void gps_pos_1_cb(const sensor_msgs::NavSatFix);
+  virtual void gps_pos_2_cb(const sensor_msgs::NavSatFix);
+  virtual void gps_pos_3_cb(const sensor_msgs::NavSatFix);
+  virtual void battery_1_cb(const sensor_msgs::BatteryState);
+  virtual void battery_2_cb(const sensor_msgs::BatteryState);
+  virtual void battery_3_cb(const sensor_msgs::BatteryState);
+  //
+  
 
   // Comment in to signal that the plugin has a way to configure it
   // bool hasConfiguration() const;
@@ -148,40 +138,18 @@ private:
   
   ////////////////////////
 
-  //////////////////////////////////////////
-  // Inspector GCS //
-  
-  // ros::ServiceClient mission_srv, stby_action_srv, paused_st_action_srv, stop_srv;
-  // inspector_gcs::MissionService mission_service;
-  // inspector_gcs::StbyActionService stby_action_service;
-  // inspector_gcs::PausedStActionService paused_state_action_service;
-  // inspector_gcs::StopService stop_service;
-
-  // ros::ServiceClient createMission_srv;
-  // ros::ServiceClient sendMission_srv;
-  // inspector_gcs::gcsCreateMission create_mission_service;
-  // inspector_gcs::gcsSendMission send_mission_service;
-
-  // ros::Subscriber uav_list_sub;
-
+ 
   //////////////////////////////////////////
 
   // Subscribers
     // Mavros
   ros::Subscriber gps_pos_1_sub, gps_pos_2_sub, gps_pos_3_sub;
+  ros::Subscriber battery_1_sub, battery_2_sub, battery_3_sub;
     // ADL
   ros::Subscriber magna_state_1_sub, magna_state_2_sub, magna_state_3_sub;
     // UAL
   ros::Subscriber ual_state_1_sub, ual_state_2_sub, ual_state_3_sub, pose_1_sub, pose_2_sub, pose_3_sub, velocity_sub;
   
-  // UAL //
-  // ros::ServiceClient srvTakeOff, srvLand, srvGoToWaypoint, srvSetVelocity;
-  // uav_abstraction_layer::TakeOff take_off;
-  // uav_abstraction_layer::Land land;
-  // uav_abstraction_layer::GoToWaypoint go_to_waypoint;
-  // uav_abstraction_layer::SetVelocity set_velocity;
-  // geometry_msgs::TwistStamped vel;
-  // geometry_msgs::PoseStamped wp;
 
   int stby_action_service_count;
   int stop_service_count;

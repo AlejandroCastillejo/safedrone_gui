@@ -73,16 +73,6 @@ p, li { white-space: pre-wrap; }
      <number>-3</number>
     </property>
    </widget>
-   <widget class="QComboBox" name="uav_selection_Box">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>10</y>
-      <width>21</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_39">
     <property name="geometry">
      <rect>
@@ -325,6 +315,9 @@ p, li { white-space: pre-wrap; }
       <height>25</height>
      </rect>
     </property>
+    <property name="text">
+     <string/>
+    </property>
     <property name="readOnly">
      <bool>true</bool>
     </property>
@@ -408,6 +401,19 @@ p, li { white-space: pre-wrap; }
      <string>Set Home</string>
     </property>
    </widget>
+   <widget class="QProgressBar" name="progressBar_Battery_1">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>10</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
   </widget>
   <widget class="QFrame" name="MissionControl_2">
    <property name="geometry">
@@ -435,16 +441,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Take Off</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="uav_selection_Box_2">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>0</y>
-      <width>21</width>
-      <height>21</height>
-     </rect>
     </property>
    </widget>
    <widget class="QLabel" name="label_40">
@@ -804,6 +800,19 @@ p, li { white-space: pre-wrap; }
      <string>Set Home</string>
     </property>
    </widget>
+   <widget class="QProgressBar" name="progressBar_Battery_2">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>10</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
   </widget>
   <widget class="QFrame" name="MissionControl_3">
    <property name="geometry">
@@ -831,16 +840,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Take Off</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="uav_selection_Box_3">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>0</y>
-      <width>21</width>
-      <height>21</height>
-     </rect>
     </property>
    </widget>
    <widget class="QLabel" name="label_41">
@@ -1198,6 +1197,19 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Set Home</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar_Battery_3">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>10</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>0</number>
     </property>
    </widget>
   </widget>
